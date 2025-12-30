@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Ilíada Atêlie</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+    <div id="main-container" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <nav class="main-nav" style="background-color: #131921; padding: 10px 20px; display: flex; align-items: center;">
+            <ul class="nav-list" style="list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; align-items: center;">
+
+                <li>
+                    <a href="index.html" style="color: #ffffff; text-decoration: none; font-weight: bold; font-size: 18px; padding: 8px 10px; border: 1px solid transparent;"
+                       onmouseover="this.style.border='1px solid #ffffff'"
+                       onmouseout="this.style.border='1px solid transparent'">
+                       Ilíada Ateliê
+                    </a>
+                </li>
+
+                <li id="nav-user-link">
+                    <a href="perfil.html" style="color: #ffffff; text-decoration: none; font-size: 14px; display: flex; flex-direction: column;"
+                       onmouseover="this.style.color='#febd69'"
+                       onmouseout="this.style.color='#ffffff'">
+                        <span style="font-size: 11px; color: #ccc;" id="nav-greeting">Olá</span>
+                        <span style="font-weight: bold;">Minha Conta</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" id="btn-logout" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 500;"
+                       onmouseover="this.style.color='#febd69'"
+                       onmouseout="this.style.color='#ffffff'">
+                        Sair
+                    </a>
+                </li>
+
+                <li>
+                    <a href="cadastro_produto.html" style="background-color: #febd69; color: #111; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px; transition: background 0.2s;"
+                       onmouseover="this.style.background='#f3a847'"
+                       onmouseout="this.style.background='#febd69'">
+                        Administração
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+                <h1 class="mb-4">Meu Perfil</h1>
+
+                <div id="loading" class="text-center" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                </div>
+
+                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+                <div id="success-message" class="alert alert-success" style="display: none;"></div>
+
+                <!-- Informações do Perfil -->
+                <div class="card mb-4">
+                    <div class="card-header" style="background-color: #131921; color: white;">
+                        <h5 class="mb-0">Informações Pessoais</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formPerfil">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Membro desde</label>
+                                <p class="form-control-plaintext" id="dataCriacao">-</p>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="background-color: #febd69; border-color: #febd69; color: #111;">
+                                Atualizar Perfil
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Endereço -->
+                <div class="card mb-4">
+                    <div class="card-header" style="background-color: #131921; color: white;">
+                        <h5 class="mb-0">Endereço</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formEndereco">
+                            <div class="mb-3">
+                                <label for="cep" class="form-label">CEP</label>
+                                <input type="text" class="form-control" id="cep" name="cep" maxlength="8" required>
+                                <small class="text-muted">Digite o CEP para preencher automaticamente</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="logradouro" class="form-label">Logradouro</label>
+                                <input type="text" class="form-control" id="logradouro" name="logradouro" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="numero" class="form-label">Número</label>
+                                    <input type="text" class="form-control" id="numero" name="numero" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="complemento" class="form-label">Complemento</label>
+                                    <input type="text" class="form-control" id="complemento" name="complemento">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bairro" class="form-label">Bairro</label>
+                                <input type="text" class="form-control" id="bairro" name="bairro" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9 mb-3">
+                                    <label for="cidade" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="cidade" name="cidade" required>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label for="estado" class="form-label">UF</label>
+                                    <input type="text" class="form-control" id="estado" name="estado" maxlength="2" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="background-color: #febd69; border-color: #febd69; color: #111;">
+                                Atualizar Endereço
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Alterar Senha -->
+                <div class="card mb-4">
+                    <div class="card-header" style="background-color: #131921; color: white;">
+                        <h5 class="mb-0">Alterar Senha</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formSenha">
+                            <div class="mb-3">
+                                <label for="novaSenha" class="form-label">Nova Senha</label>
+                                <input type="password" class="form-control" id="novaSenha" name="senha" minlength="8" required>
+                                <small class="text-muted">Mínimo 8 caracteres (não pode ser só números ou só maiúsculas)</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmarNovaSenha" class="form-label">Confirmar Nova Senha</label>
+                                <input type="password" class="form-control" id="confirmarNovaSenha" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="background-color: #febd69; border-color: #febd69; color: #111;">
+                                Alterar Senha
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Deletar Conta -->
+                <div class="card mb-4 border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Zona de Perigo</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-danger">
+                            <strong>Atenção:</strong> Esta ação desativará sua conta permanentemente.
+                        </p>
+                        <button type="button" class="btn btn-danger" id="btnDeletarConta">
+                            Desativar Conta
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer class="utility-footer" style="background-color: #131921; color: white; padding: 20px; text-align: center; margin-top: 50px;">
+        <p>Ilíada Atêlie &copy; 2025</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/viacep.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+</html>

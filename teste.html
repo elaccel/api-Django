@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Conexão API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #febd69;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #f3a847;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Teste de Conexão com API</h1>
+
+    <div class="test-section">
+        <h2>1. Teste de Produtos (GET)</h2>
+        <button onclick="testarProdutos()">Buscar Produtos</button>
+        <div id="result-produtos" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Teste de Login</h2>
+        <input type="email" id="email-login" placeholder="Email" value="maria@example.com">
+        <input type="password" id="senha-login" placeholder="Senha" value="Pass1234">
+        <button onclick="testarLogin()">Fazer Login</button>
+        <div id="result-login" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Teste de Cadastro</h2>
+        <button onclick="testarCadastro()">Cadastrar Novo Usuário</button>
+        <div id="result-cadastro" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Status da API</h2>
+        <p><strong>URL da API:</strong> http://localhost:8000</p>
+        <p><strong>Token salvo:</strong> <span id="token-status">Verificando...</span></p>
+        <button onclick="verificarToken()">Verificar Token</button>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        async function testarProdutos() {
+            const result = document.getElementById('result-produtos');
+            result.textContent = 'Buscando produtos...';
+            result.className = 'result';
+
+            try {
+                const produtos = await api.getProdutos();
+                result.textContent = JSON.stringify(produtos, null, 2);
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = 'ERRO:\n' + JSON.stringify(error, null, 2);
+                result.className = 'result error';
+            }
+        }
+
+        async function testarLogin() {
+            const result = document.getElementById('result-login');
+            const email = document.getElementById('email-login').value;
+            const senha = document.getElementById('senha-login').value;
+
+            result.textContent = 'Fazendo login...';
+            result.className = 'result';
+
+            try {
+                const response = await api.login(email, senha);
+                result.textContent = 'LOGIN REALIZADO!\n\n' + JSON.stringify(response, null, 2);
+                result.className = 'result success';
+                verificarToken();
+            } catch (error) {
+                result.textContent = 'ERRO NO LOGIN:\n' + JSON.stringify(error, null, 2);
+                result.className = 'result error';
+            }
+        }
+
+        async function testarCadastro() {
+            const result = document.getElementById('result-cadastro');
+            result.textContent = 'Cadastrando usuário...';
+            result.className = 'result';
+
+            const randomNum = Math.floor(Math.random() * 10000);
+            const dadosCadastro = {
+                nome: `Teste Usuario ${randomNum}`,
+                email: `teste${randomNum}@example.com`,
+                cpf: `111222333${randomNum.toString().padStart(2, '0')}`,
+                senha: 'Teste123',
+                senha_confirmacao: 'Teste123',
+                cep: '01310100',
+                logradouro: 'Av Paulista',
+                numero: `${randomNum}`,
+                complemento: '',
+                bairro: 'Bela Vista',
+                cidade: 'Sao Paulo',
+                estado: 'SP'
+            };
+
+            try {
+                const response = await api.cadastro(dadosCadastro);
+                result.textContent = 'CADASTRO REALIZADO!\n\n' + JSON.stringify(response, null, 2);
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = 'ERRO NO CADASTRO:\n' + JSON.stringify(error, null, 2);
+                result.className = 'result error';
+            }
+        }
+
+        function verificarToken() {
+            const token = TokenManager.getAccessToken();
+            const tokenStatus = document.getElementById('token-status');
+
+            if (token) {
+                tokenStatus.textContent = 'SIM - Token presente';
+                tokenStatus.style.color = 'green';
+            } else {
+                tokenStatus.textContent = 'NÃO - Nenhum token salvo';
+                tokenStatus.style.color = 'red';
+            }
+        }
+
+        // Verificar token ao carregar
+        verificarToken();
+    </script>
+</body>
+</html>

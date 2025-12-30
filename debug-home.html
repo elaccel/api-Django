@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .produto-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 10px;
+        }
+        #produtos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug - Produtos na Home</h1>
+
+    <div class="debug-section">
+        <h2>1. Verificação de Scripts</h2>
+        <p>✅ API carregada: <span id="api-loaded">Verificando...</span></p>
+        <p>✅ Elementos DOM: <span id="dom-check">Verificando...</span></p>
+    </div>
+
+    <div class="debug-section">
+        <h2>2. Teste de Requisição</h2>
+        <button onclick="testarRequisicao()" style="padding: 10px 20px; background-color: #febd69; border: none; border-radius: 5px; cursor: pointer;">
+            Testar Buscar Produtos
+        </button>
+        <pre id="resultado-api">Clique no botão para testar...</pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>3. Produtos Renderizados</h2>
+        <div id="loading-produtos" style="text-align: center; display: none;">
+            <p>Carregando...</p>
+        </div>
+        <div id="produtos-container">
+            <!-- Produtos serão inseridos aqui -->
+        </div>
+        <div id="produtos-vazio" style="text-align: center; display: none; padding: 40px;">
+            <p>Nenhum produto encontrado.</p>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Verificar se API foi carregada
+        document.getElementById('api-loaded').textContent = typeof api !== 'undefined' ? 'SIM ✓' : 'NÃO ✗';
+
+        // Verificar elementos DOM
+        const loadingProdutos = document.getElementById('loading-produtos');
+        const produtosContainer = document.getElementById('produtos-container');
+        const produtosVazio = document.getElementById('produtos-vazio');
+
+        document.getElementById('dom-check').textContent =
+            (loadingProdutos && produtosContainer && produtosVazio) ? 'SIM ✓' : 'NÃO ✗';
+
+        // Função de teste
+        async function testarRequisicao() {
+            const resultado = document.getElementById('resultado-api');
+            resultado.textContent = 'Buscando produtos...\n';
+
+            try {
+                console.log('Chamando api.getProdutos()...');
+                const response = await api.getProdutos();
+
+                resultado.textContent = 'Resposta da API:\n\n';
+                resultado.textContent += JSON.stringify(response, null, 2);
+
+                console.log('Resposta completa:', response);
+
+                // Tentar renderizar
+                renderizarProdutos(response);
+
+            } catch (error) {
+                resultado.textContent = 'ERRO:\n\n';
+                resultado.textContent += `Tipo: ${error.name}\n`;
+                resultado.textContent += `Mensagem: ${error.message}\n`;
+                resultado.textContent += `Stack: ${error.stack}`;
+
+                console.error('Erro completo:', error);
+            }
+        }
+
+        // Função para renderizar produtos
+        function renderizarProdutos(response) {
+            console.log('Iniciando renderização...');
+
+            loadingProdutos.style.display = 'none';
+            produtosContainer.innerHTML = '';
+            produtosVazio.style.display = 'none';
+
+            // A API retorna {count, next, previous, results}
+            const produtos = response.results || response;
+
+            console.log('Produtos extraídos:', produtos);
+            console.log('Quantidade de produtos:', produtos.length);
+
+            if (!produtos || produtos.length === 0) {
+                produtosVazio.style.display = 'block';
+                console.log('Nenhum produto encontrado');
+                return;
+            }
+
+            // Renderizar cada produto
+            produtos.forEach((produto, index) => {
+                console.log(`Renderizando produto ${index}:`, produto);
+
+                const card = document.createElement('div');
+                card.className = 'produto-card';
+                card.innerHTML = `
+                    <h3>${produto.nome}</h3>
+                    <p><strong>Marca:</strong> ${produto.marca}</p>
+                    <p><strong>Preço:</strong> R$ ${produto.preco}</p>
+                    <p><strong>Estoque:</strong> ${produto.estoque}</p>
+                    <p>${produto.descricao || 'Sem descrição'}</p>
+                `;
+
+                produtosContainer.appendChild(card);
+            });
+
+            console.log('Renderização concluída!');
+        }
+
+        // Carregar automaticamente ao abrir a página
+        window.addEventListener('load', () => {
+            console.log('Página carregada, buscando produtos...');
+            testarRequisicao();
+        });
+    </script>
+</body>
+</html>
